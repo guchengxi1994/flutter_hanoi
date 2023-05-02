@@ -62,23 +62,41 @@ class HanoiController extends ChangeNotifier {
 
     if (right > boardSize.width * 0.75) {
       final elements = details.where((element) => element.towerPosition == 2);
+
       final int count;
-      if (before != 2) {
-        count = elements.length + 1;
-      } else {
-        count = elements.length;
-      }
+      final double center;
+
       if (elements.isNotEmpty) {
-        if (blockId < elements.first.blockId) {
-          print("cannot move");
+        if (blockId < elements.last.blockId) {
+          debugPrint(
+              "cannot move $blockId from ${details[blockId - 1].towerPosition} to 2");
+          center =
+              boardSize.width * 0.25 * (details[blockId - 1].towerPosition + 1);
+          count = details
+              .where((element) =>
+                  element.towerPosition == details[blockId - 1].towerPosition)
+              .length;
+        } else {
+          center = boardSize.width * 0.75;
+          if (before != 2) {
+            count = elements.length + 1;
+          } else {
+            count = elements.length;
+          }
+          details[blockId - 1].towerPosition = 2;
         }
+      } else {
+        center = boardSize.width * 0.75;
+        if (before != 2) {
+          count = elements.length + 1;
+        } else {
+          count = elements.length;
+        }
+        details[blockId - 1].towerPosition = 2;
       }
 
-      final center = boardSize.width * 0.75;
       details[blockId - 1].left =
           center - (boardSize.width * 0.25 - blockId * 10) / 2;
-
-      details[blockId - 1].towerPosition = 2;
       details[blockId - 1].top = boardSize.height - (30.0 * count);
 
       if (before != 2) {
@@ -86,25 +104,41 @@ class HanoiController extends ChangeNotifier {
       }
     } else if (right > boardSize.width * 0.5) {
       final elements = details.where((element) => element.towerPosition == 1);
-      // final count = elements.length + 1;
+
       final int count;
-      if (before != 1) {
-        count = elements.length + 1;
-      } else {
-        count = elements.length;
-      }
+      final double center;
 
       if (elements.isNotEmpty) {
-        if (blockId < elements.first.blockId) {
-          print("cannot move");
+        if (blockId < elements.last.blockId) {
+          debugPrint(
+              "cannot move $blockId from ${details[blockId - 1].towerPosition} to 1");
+          center =
+              boardSize.width * 0.25 * (details[blockId - 1].towerPosition + 1);
+          count = details
+              .where((element) =>
+                  element.towerPosition == details[blockId - 1].towerPosition)
+              .length;
+        } else {
+          center = boardSize.width * 0.5;
+          if (before != 1) {
+            count = elements.length + 1;
+          } else {
+            count = elements.length;
+          }
+          details[blockId - 1].towerPosition = 1;
         }
+      } else {
+        center = boardSize.width * 0.5;
+        if (before != 1) {
+          count = elements.length + 1;
+        } else {
+          count = elements.length;
+        }
+        details[blockId - 1].towerPosition = 1;
       }
 
-      final center = boardSize.width * 0.5;
       details[blockId - 1].left =
           center - (boardSize.width * 0.25 - blockId * 10) / 2;
-
-      details[blockId - 1].towerPosition = 1;
       details[blockId - 1].top = boardSize.height - (30.0 * count);
 
       if (before != 1) {
@@ -112,24 +146,40 @@ class HanoiController extends ChangeNotifier {
       }
     } else {
       final elements = details.where((element) => element.towerPosition == 0);
-      // final count = elements.length + 1;
+
       final int count;
-      if (before != 0) {
-        count = elements.length + 1;
-      } else {
-        count = elements.length;
-      }
+      final double center;
 
       if (elements.isNotEmpty) {
-        if (blockId < elements.first.blockId) {
-          print("cannot move");
+        if (blockId < elements.last.blockId) {
+          debugPrint(
+              "cannot move $blockId from ${details[blockId - 1].towerPosition} to 0");
+          center =
+              boardSize.width * 0.25 * (details[blockId - 1].towerPosition + 1);
+          count = details
+              .where((element) =>
+                  element.towerPosition == details[blockId - 1].towerPosition)
+              .length;
+        } else {
+          center = boardSize.width * 0.25;
+          if (before != 0) {
+            count = elements.length + 1;
+          } else {
+            count = elements.length;
+          }
+          details[blockId - 1].towerPosition = 0;
         }
+      } else {
+        center = boardSize.width * 0.25;
+        if (before != 0) {
+          count = elements.length + 1;
+        } else {
+          count = elements.length;
+        }
+        details[blockId - 1].towerPosition = 0;
       }
 
-      final center = boardSize.width * 0.25;
       details[blockId - 1].left = center - (center - blockId * 10) / 2;
-
-      details[blockId - 1].towerPosition = 0;
       details[blockId - 1].top = boardSize.height - (30.0 * count);
 
       if (before != 0) {
