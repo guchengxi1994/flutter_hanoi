@@ -10,23 +10,15 @@ class Hanoi extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-            create: (_) => HanoiController()..initPosition(size))
-      ],
-      builder: (ctx, child) {
-        return SizedBox.fromSize(
-          size: size,
-          child: Stack(
-            children: ctx
-                .watch<HanoiController>()
-                .details
-                .map((e) => _Block(details: e))
-                .toList(),
-          ),
-        );
-      },
+    return SizedBox.fromSize(
+      size: size,
+      child: Stack(
+        children: context
+            .watch<HanoiController>()
+            .details
+            .map((e) => _Block(details: e))
+            .toList(),
+      ),
     );
   }
 }

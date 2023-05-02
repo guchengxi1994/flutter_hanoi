@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hanoi/components/block_details.dart';
-
+import 'dart:math' as math;
 import 'movement.dart';
 
 class HanoiController extends ChangeNotifier {
@@ -12,9 +12,22 @@ class HanoiController extends ChangeNotifier {
   List<Movement> movements = [];
   List<BlockDetails> details = [];
 
+  /// TODO
+  ///
+  /// 开启仅能移动到隔壁柱子的模式
+  bool onlyMoveToNext = false;
+
+  num _getBest() {
+    return math.pow(2, _hanoiBlockCount) - 1;
+  }
+
+  num get best => _getBest();
+
   setCount(int count) {
     assert(count >= 3 && count <= 5);
     _hanoiBlockCount = count;
+    details.clear();
+    movements.clear();
     initPosition(boardSize, refresh: false);
     notifyListeners();
   }
@@ -30,13 +43,31 @@ class HanoiController extends ChangeNotifier {
       details.add(BlockDetails(
           height: 30,
           left: center - (center - i * 10) / 2,
-          top: size.height - (30.0 * i),
+          top: size.height - (30.0 * i) - 5,
           width: center - (i) * 10,
           blockId: i));
     }
     if (refresh) {
       notifyListeners();
     }
+  }
+
+  prevStep() {
+    if (movements.isEmpty) {
+      return;
+    }
+    final m = movements.removeLast();
+    final count =
+        details.where((element) => element.towerPosition == m.from).length + 1;
+
+    final a = boardSize.width * 0.25;
+
+    final double center = a * (m.from + 1);
+    details[m.blockId - 1].left = center - (a - m.blockId * 10) / 2;
+    details[m.blockId - 1].top = boardSize.height - (30.0 * count) - 5;
+    details[m.blockId - 1].towerPosition = m.from;
+
+    notifyListeners();
   }
 
   changePosition(int blockId, DragUpdateDetails d) {
@@ -54,6 +85,10 @@ class HanoiController extends ChangeNotifier {
       return false;
     }
     return true;
+  }
+
+  void printSteps() {
+    debugPrint("$_hanoiBlockCount\n ${movements.steps()}");
   }
 
   onMoveDone(int blockId) {
@@ -97,7 +132,7 @@ class HanoiController extends ChangeNotifier {
 
       details[blockId - 1].left =
           center - (boardSize.width * 0.25 - blockId * 10) / 2;
-      details[blockId - 1].top = boardSize.height - (30.0 * count);
+      details[blockId - 1].top = boardSize.height - (30.0 * count) - 5;
 
       if (before != 2) {
         addMovement(Movement(blockId: blockId, from: before, to: 2));
@@ -139,7 +174,7 @@ class HanoiController extends ChangeNotifier {
 
       details[blockId - 1].left =
           center - (boardSize.width * 0.25 - blockId * 10) / 2;
-      details[blockId - 1].top = boardSize.height - (30.0 * count);
+      details[blockId - 1].top = boardSize.height - (30.0 * count) - 5;
 
       if (before != 1) {
         addMovement(Movement(blockId: blockId, from: before, to: 1));
@@ -180,7 +215,7 @@ class HanoiController extends ChangeNotifier {
       }
 
       details[blockId - 1].left = center - (center - blockId * 10) / 2;
-      details[blockId - 1].top = boardSize.height - (30.0 * count);
+      details[blockId - 1].top = boardSize.height - (30.0 * count) - 5;
 
       if (before != 0) {
         addMovement(Movement(blockId: blockId, from: before, to: 0));
