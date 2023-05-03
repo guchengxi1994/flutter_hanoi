@@ -1,7 +1,10 @@
+import 'package:confetti/confetti.dart';
 import 'package:cool_dropdown/cool_dropdown.dart';
 import 'package:cool_dropdown/models/cool_dropdown_item.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_switch/flutter_switch.dart';
 import 'package:provider/provider.dart';
+import 'dart:math' as math;
 
 import 'components/board.dart';
 import 'components/controller.dart';
@@ -86,6 +89,24 @@ class _MyHomePageState extends State<MyHomePage> {
                   const SizedBox(
                     height: 20,
                   ),
+                  Align(
+                      alignment: Alignment.center,
+                      child: ConfettiWidget(
+                        confettiController: HanoiController.confettiController,
+                        blastDirection: math.pi, // radial value - LEFT
+                        particleDrag: 0.05, // apply drag to the confetti
+                        emissionFrequency: 0.05, // how often it should emit
+                        numberOfParticles: 20, // number of particles to emit
+                        gravity: 0.05, // gravity - or fall speed
+                        shouldLoop: false,
+                        colors: const [
+                          Colors.green,
+                          Colors.blue,
+                          Colors.pink
+                        ], // manually specify the colors to be used
+                        strokeWidth: 1,
+                        strokeColor: Colors.white,
+                      )),
                   SizedBox.fromSize(
                       size: const Size(500, 300),
                       child: CustomPaint(
@@ -106,16 +127,31 @@ class _MyHomePageState extends State<MyHomePage> {
                           width: 20,
                         ),
                         InkWell(
-                          onTap: () => ctx.read<HanoiController>().printSteps(),
-                          child: const Icon(Icons.error),
-                        ),
-                        InkWell(
                           onTap: () {
                             ctx.read<HanoiController>().prevStep();
                           },
                           child: const Icon(Icons.arrow_back),
                         ),
                         const Expanded(child: SizedBox()),
+                        Tooltip(
+                          message: "激活后，仅能移动至隔壁柱子",
+                          child: FlutterSwitch(
+                            width: 55.0,
+                            height: 25.0,
+                            valueFontSize: 12.0,
+                            toggleSize: 18.0,
+                            value: ctx.watch<HanoiController>().onlyMoveToNext,
+                            onToggle: (val) {
+                              setState(() {
+                                ctx.read<HanoiController>().changeMoveType(val);
+                                ctx.read<HanoiController>().setCount();
+                              });
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
                         CoolDropdown(
                           defaultItem: dropdownItemList.first,
                           controller: dropdownController,
@@ -123,16 +159,16 @@ class _MyHomePageState extends State<MyHomePage> {
                           onChange: (dropdownItem) {
                             switch (dropdownItem) {
                               case 'easy':
-                                ctx.read<HanoiController>().setCount(3);
+                                ctx.read<HanoiController>().setCount(count: 3);
                                 break;
                               case 'normal':
-                                ctx.read<HanoiController>().setCount(4);
+                                ctx.read<HanoiController>().setCount(count: 4);
                                 break;
                               case 'hard':
-                                ctx.read<HanoiController>().setCount(5);
+                                ctx.read<HanoiController>().setCount(count: 5);
                                 break;
                               default:
-                                ctx.read<HanoiController>().setCount(3);
+                                ctx.read<HanoiController>().setCount(count: 3);
                             }
                           },
                           resultOptions: const ResultOptions(
@@ -172,6 +208,13 @@ class _MyHomePageState extends State<MyHomePage> {
                             render: DropdownItemRender.all,
                             height: 50,
                           ),
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        InkWell(
+                          onTap: () => ctx.read<HanoiController>().printSteps(),
+                          child: const Icon(Icons.error),
                         ),
                       ],
                     ),
