@@ -16,8 +16,6 @@ class HanoiController extends ChangeNotifier {
   List<Movement> movements = [];
   List<BlockDetails> details = [];
 
-  /// TODO
-  ///
   /// 开启仅能移动到隔壁柱子的模式
   bool onlyMoveToNext = false;
 
@@ -26,11 +24,11 @@ class HanoiController extends ChangeNotifier {
     notifyListeners();
   }
 
-  @override
-  void dispose() {
-    confettiController.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   confettiController.dispose();
+  //   super.dispose();
+  // }
 
   num _getBest() {
     if (!onlyMoveToNext) {
