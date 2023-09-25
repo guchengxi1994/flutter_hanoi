@@ -72,7 +72,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
             builder: (ctx, child) {
               return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SizedBox(
                     width: 500,
@@ -130,7 +130,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           onTap: () {
                             ctx.read<HanoiController>().prevStep();
                           },
-                          child: const Icon(Icons.arrow_back),
+                          child: const Tooltip(
+                            message: "回退一步",
+                            child: Icon(Icons.arrow_back),
+                          ),
                         ),
                         const Expanded(child: SizedBox()),
                         Tooltip(

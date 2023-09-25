@@ -261,7 +261,7 @@ class HanoiController extends ChangeNotifier {
         details[blockId - 1].towerPosition = 0;
       }
 
-      details[blockId - 1].left = center - (center - blockId * 10) / 2;
+      details[blockId - 1].left = center - (details[blockId - 1].width) / 2;
       details[blockId - 1].top = boardSize.height - (30.0 * count) - 5;
 
       if (onlyMoveToNext && before != 1) {
